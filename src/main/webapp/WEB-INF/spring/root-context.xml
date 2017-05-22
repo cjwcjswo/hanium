@@ -7,5 +7,4 @@
 		<property name="prefix" value="/WEB-INF/views/"/> <!-- 폴더경로설정 -->
 		<property name="suffix" value=".jsp"/> <!-- 확장자 설정 -->
 	</bean>
-		
 </beans>
