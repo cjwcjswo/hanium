@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.userMapper">
+<resultMap type="userDTO" id="userMap">
+	<id property="userId" column="user_id"/>
+	<result property="userPw" column="user_pw"/>
+	<result property="userName" column="user_name"/>
+</resultMap>
+<insert id="userInsert" parameterType="userDTO">
+	insert into user_info values(#{userId},#{userPw},#{userName},#{email},#{addr},#{phone}, 1)
+</insert>
+<select id="selectUser" parameterType="userDTO" resultMap="userMap">
+	select * from user_info
+	<where>
+	<if test="userId != null">
+	user_id = #{userId}
+	</if>
+	<if test="userPw != null">
+	and user_pw = #{userPw}
+	</if>
+	</where>
+</select>
+</mapper>

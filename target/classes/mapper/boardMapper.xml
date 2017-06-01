@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.boardMapper">
+	<resultMap type="boardDTO" id="boardMap">
+		<id column="board_num" property="boardNum" />
+		<result column="user_id" property="userId" />
+		<result column="user_name" property="userName" />
+		<result column="subject" property="subject"/>
+		<result column="content" property="content"/>
+		<result column="write_day" property="writeDay" />
+		<result column="read_num" property="readNum" />
+		<collection property="reply" ofType="replyDTO">
+			<id column="reply_num" property="replyNum" />
+		</collection>
+	</resultMap>
+	<select id="select" parameterType="int" resultMap="boardMap">
+		select b.board_num, b.user_id, b.user_name, b.subject, b.content,
+		b.password, b.write_day, b.read_num, r.reply_num
+		from board b left join reply r
+		on b.board_num = r.board_num
+		<where>
+			<if test="value != 0">
+				b.board_num = #{value}
+			</if>
+		</where>
+		order by b.board_num desc
+	</select>
+	<update id="readUp" parameterType="int">
+		update board set read_num =
+		read_num + 1 where board_num=#{value}
+	</update>
+	<insert id="insert" parameterType="boardDTO">
+		insert into board
+		values(board_seq.nextval, #{userId}, #{userName},
+		#{subject},
+		#{content}, #{password}, to_char(sysdate, 'YYYY-MM-DD HH:MI:SS'), 0)
+	</insert>
+
+	<update id="update" parameterType="boardDTO">
+		update board
+		<set>
+			<if test="subject!=null">
+				subject = #{subject},
+			</if>
+			<if test="content!=null">
+				content = #{content}
+			</if>
+		</set>
+		where board_num = ${boardNum}
+	</update>
+
+	<delete id="delete" parameterType="int">
+		delete from board
+		where
+		board_num = #{value}
+	</delete>
+
+	<select id="countReply" parameterType="int" resultType="int">
+		select count(*)
+		from board b join reply r
+		on b.board_num = r.board_num
+		where b.board_num = #{value}
+	</select>
+	
+	<select id="count" resultType="int">
+		select count(*) from board
+	</select>
+</mapper>

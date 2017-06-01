@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.noticeReplyMapper">
+	<resultMap type="replyDTO" id="replyMap">
+		<id column="reply_num" property="replyNum"/>
+		<result column="board_num" property="boardNum"/>
+		<result column="user_id" property="userId"/>
+		<result column="user_name" property="userName"/>
+		<result column="wirte_day" property="writeDay"/>
+	</resultMap>
+	<select id="select" parameterType="int" resultMap="replyMap">
+		select * from notice_reply where board_num = #{value} order by reply_num desc
+	</select>
+	<insert id="insert" parameterType="replyDTO">
+		insert into notice_reply values(reply_seq.nextval, #{boardNum}, #{userId},
+		#{userName}, #{content}, to_char(sysdate, 'YYYY-MM-DD HH:MI:SS'))
+	</insert>
+	<delete id="delete" parameterType="int">
+		delete from notice_reply where reply_num = #{value}
+	</delete>
+</mapper>
